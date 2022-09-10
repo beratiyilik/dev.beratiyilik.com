@@ -28,10 +28,10 @@ jobs:
           pkg-manager: npm
       - run:
           name: Run tests
-          command: npm test
+          command: npm run test
       - run:
           name: Build
-          command: npm build
+          command: npm run build
 
 workflows:
   # Below is the definition of your workflow.
