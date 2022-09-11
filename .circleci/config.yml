@@ -35,6 +35,9 @@ jobs:
       - run:
           name: Build
           command: npm run build
+      - run:
+          name: INFO
+          command: pwd && ls -a && ls -a build
   deploy:
     docker:
       - image: cimg/node:16.10
