@@ -7,7 +7,7 @@ echo "ls -la: $(ls -la)";
 
 ssh -oStrictHostKeyChecking=no -v $SERVER_USERNAME@$SERVER_HOSTNAME "cd /var/www/dev.beratiyilik.com && rm -rf build node_modules"
 
-rsync -e "ssh -oStrictHostKeyChecking=no -v" -av --delete --exclude={'.circleci','.git','.gitignore','build','node_modules'} ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com  # deploy the project
+rsync -e "ssh -oStrictHostKeyChecking=no -v" -va --delete ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com --exclude '.circleci' --exclude '.git' --exclude '.gitignore' --exclude 'build' --exclude 'node_modules'
 
 ssh -oStrictHostKeyChecking=no -v $SERVER_USERNAME@$SERVER_HOSTNAME<<EOF
     cd /var/www/dev.beratiyilik.com;
