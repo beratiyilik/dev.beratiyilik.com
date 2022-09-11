@@ -1,6 +1,10 @@
 #!/bin/zsh
 echo "EXECUTING deploy.sh FILE!";
 
+echo $(pwd);
+ls -a;
+rsync --version;
+
 rsync -e "ssh -o StrictHostKeyChecking=no" -va --delete ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com --exclude={".git",".gitignore","node_modules",".circleci","deploy.sh"}  # deploy the project
 
 ssh -oStrictHostKeyChecking=no -v $SERVER_USERNAME@$SERVER_HOSTNAME<<EOF
