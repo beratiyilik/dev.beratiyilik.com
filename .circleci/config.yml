@@ -52,7 +52,7 @@ jobs:
           command: npm run build
       - run:
           name: deploy.sh
-          command: ssh $SERVER_USERNAME@$SERVER_HOSTNAME:"whoami && pwd"
+          command: ssh $SERVER_USERNAME@$SERVER_HOSTNAME "whoami && pwd"
     
 workflows:
   # Below is the definition of your workflow.
