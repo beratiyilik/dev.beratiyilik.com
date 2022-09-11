@@ -5,7 +5,7 @@ echo "Working directory: $PWD";
 
 echo "ls -la: $(ls -la)";
 
-rsync -e "ssh -oStrictHostKeyChecking=no -v" -va --delete ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com --exclude '.circleci' --exclude '.git' --exclude '.gitignore' --exclude 'build'
+rsync -e "ssh -oStrictHostKeyChecking=no -v" -va --delete ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com --exclude '.circleci' --exclude '.git' --exclude '.gitignore'
 
 ssh -oStrictHostKeyChecking=no -v $SERVER_USERNAME@$SERVER_HOSTNAME<<EOF
     cd /var/www/dev.beratiyilik.com;
