@@ -5,7 +5,7 @@ echo "Working directory: $PWD";
 
 echo "ls -la: $(ls -la)";
 
-rsync -va --delete ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com --exclude={"build",".git",".gitignore","node_modules",".circleci","deploy.sh"}  # deploy the project
+rsync -e "ssh -oStrictHostKeyChecking=no -v" -va --delete ./ $SERVER_USERNAME@$SERVER_HOSTNAME:/var/www/dev.beratiyilik.com --exclude={"build",".git",".gitignore","node_modules",".circleci","deploy.sh"}  # deploy the project
 
 ssh -oStrictHostKeyChecking=no -v $SERVER_USERNAME@$SERVER_HOSTNAME<<EOF
     cd /var/www/dev.beratiyilik.com;

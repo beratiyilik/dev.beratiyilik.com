@@ -46,7 +46,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: 
-          name: Installing OS dependencies
+          name: Installing OS packages
           command: sudo apt-get -y update && sudo apt install rsync
       - run:
           name: Build
