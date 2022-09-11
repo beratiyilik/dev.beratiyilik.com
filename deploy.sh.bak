@@ -1,0 +1,40 @@
+#!/bin/zsh
+# emulate -LR zsh # reset zsh options
+# export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+echo "DEPLOY HAS STARTED!";
+
+echo "LOCAL USER: $(whoami)" # print the user name
+
+echo "LOCAL WORKING DIRECTORY: $(pwd)" # print the current directory
+
+echo "LOCAL PATH: ${PATH}" # print the path
+
+npm run build # build the project
+
+# excludedFiles=".git\* .gitignore node_modules/\* .circleci\* deploy.sh"
+
+zip -r project.zip * -x .git\* .gitignore node_modules/\* .circleci\* deploy.sh # zip the build folder
+
+sftp root@beratiyilik.com:/var/www <<< "put /Users/beratiyilik/repos/dev.beratiyilik.com/project.zip" # upload the zip file to the server
+
+ssh root@beratiyilik.com<<EOF
+    cd /var/www;
+    sudo rm -rf dev.beratiyilik.com/*;
+    unzip -o project.zip -d dev.beratiyilik.com;
+    npm install --prefix dev.beratiyilik.com;
+    sudo pm2 restart APP_TEST;
+    sudo systemctl restart nginx;
+    sudo pm2 show APP_TEST;
+    sudo systemctl status nginx;
+    sudo rm -rf project.zip;
+    logout;
+EOF
+
+curl -I https://dev.beratiyilik.com/
+
+rm -rf build project.zip # remove the build and zip file from the local machine
+
+echo "DEPLOY HAS FINISHED!";
+
+## eof
