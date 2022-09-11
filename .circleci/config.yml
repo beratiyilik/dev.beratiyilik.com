@@ -45,6 +45,9 @@ jobs:
       - add_ssh_keys
       - node/install-packages:
           pkg-manager: npm
+      - run: 
+          name: Installing rsync
+          command: sudo apt install rsync
       - run:
           name: Build
           command: npm run build
