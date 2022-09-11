@@ -10,7 +10,9 @@ echo "LOCAL WORKING DIRECTORY: $(pwd)" # print the current directory
 
 echo "LOCAL PATH: ${PATH}" # print the path
 
-rsync -va --delete ./ root@ssh.beratiyilik.com:/var/www/dev.beratiyilik.com --exclude={"build",".git",".gitignore","node_modules",".circleci","deploy.sh",".DS_Store"}  # deploy the project
+ssh root@ssh.beratiyilik.com "cd /var/www/dev.beratiyilik.com && rm -rf build node_modules"
+
+rsync -va --delete ./ root@ssh.beratiyilik.com:/var/www/dev.beratiyilik.com --exclude={"build",".git",".gitignore","node_modules",".circleci"}  # deploy the project
 
 ssh root@ssh.beratiyilik.com<<EOF
     cd /var/www/dev.beratiyilik.com;

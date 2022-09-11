@@ -12,9 +12,9 @@ echo "LOCAL PATH: ${PATH}" # print the path
 
 npm run build # build the project
 
-# excludedFiles="build/\* .git\* .gitignore node_modules/\* .circleci\* deploy.sh"
+# excludedFiles="build/\* .git\* .gitignore node_modules/\* .circleci\*"
 
-zip -r project.zip * -x build/\* .git\* .gitignore node_modules/\* .circleci\* deploy.sh .DS_Store # zip the build folder
+zip -r project.zip * -x build/\* .git\* .gitignore node_modules/\* .circleci\* # zip the build folder
 
 sftp root@beratiyilik.com:/var/www <<< "put /Users/beratiyilik/repos/dev.beratiyilik.com/project.zip" # upload the zip file to the server
 
