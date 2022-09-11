@@ -43,7 +43,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./build
-      - run: pwd && ls -a && sh ./deploy.sh
+      - run: pwd && ls -a && ls -a build
     
 
 workflows:
