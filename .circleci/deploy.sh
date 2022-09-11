@@ -3,4 +3,4 @@ echo "Executing deploy.sh"
 whoami
 pwd
 ls -a
-ssh $SERVER_USERNAME@$SERVER_HOSTNAME "whoami && pwd"
+ssh -oStrictHostKeyChecking=no -v $SERVER_USERNAME@$SERVER_HOSTNAME "whoami && pwd"
