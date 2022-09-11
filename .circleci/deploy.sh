@@ -3,6 +3,5 @@ echo "Executing deploy.sh"
 whoami
 pwd
 ls -a
-echo $PATH
-echo $HOME
-ls -a ~/../../var/www
+
+echo yes | ssh $SERVER_USERNAME@$SERVER_HOSTNAME "whoami && pwd"
