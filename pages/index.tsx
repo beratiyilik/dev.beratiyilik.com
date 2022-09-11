@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const error: Error = result.error;
   return (
     <div >
-      {`no more node modules ${data?.name}`}
+      {`HOW HOW ${data?.name}`}
     </div>
   )
 }
