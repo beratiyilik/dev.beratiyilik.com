@@ -43,8 +43,6 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints:
-            - "da:4e:2b:8a:52:9e:ca:71:d1:29:15:74:2b:8a:9e:8b"
       - node/install-packages:
           pkg-manager: npm
       - run:
