@@ -37,4 +37,4 @@ next-env.d.ts
 
 # deployment
 build
-deploy.sh
+# deploy.sh

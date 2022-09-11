@@ -50,11 +50,13 @@ jobs:
       - run:
           name: Build
           command: npm run build
-      - attach_workspace:
-          at: /home/circleci
-      - run: pwd && ls -a && ls -a project
+      - run:
+          name: INFO
+          command: pwd && ls -a && ls -a build
+      - run:
+          name: deploy.sh
+          command: sh deploy.sh
     
-
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
