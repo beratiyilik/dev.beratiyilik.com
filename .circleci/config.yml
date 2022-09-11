@@ -44,9 +44,15 @@ jobs:
     # Then run your tests!
     # CircleCI will report the results back to your VCS provider.
     steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Build
+          command: npm run build
       - attach_workspace:
-          at: /home/circleci/project
-      - run: pwd && ls -a && ls -a build
+          at: /home/circleci
+      - run: pwd && ls -a && ls -a project
     
 
 workflows:
