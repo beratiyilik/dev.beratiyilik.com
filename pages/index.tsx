@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const error: Error = result.error;
   return (
     <div >
-      {`Hi all ${data?.name}`}
+      {`please wooooooork ${data?.name}`}
     </div>
   )
 }
