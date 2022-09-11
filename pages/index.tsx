@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const error: Error = result.error;
   return (
     <div >
-      {`BIRDE BU ${data?.name}`}
+      {`HANIFE BIR ISIRAM MI? ${data?.name}`}
     </div>
   )
 }
