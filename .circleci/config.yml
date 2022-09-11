@@ -45,7 +45,7 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       - attach_workspace:
-          at: ./build
+          at: /home/circleci/project
       - run: pwd && ls -a && ls -a build
     
 
