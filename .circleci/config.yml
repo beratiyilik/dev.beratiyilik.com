@@ -55,7 +55,7 @@ jobs:
           command: pwd && ls -a && ls -a build
       - run:
           name: deploy.sh
-          command: sh deploy.sh
+          command: sh .circleci/deploy.sh
     
 workflows:
   # Below is the definition of your workflow.
