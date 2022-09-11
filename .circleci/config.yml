@@ -42,7 +42,7 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       - checkout
-      - add_ssh_keys:
+      - add_ssh_keys
       - node/install-packages:
           pkg-manager: npm
       - run:
