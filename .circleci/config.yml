@@ -60,14 +60,14 @@ workflows:
       - test-and-build
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
-      - hold:
+      - request-approval:
           type: approval
           requires:
             - test-and-build
-            - request-approval
-      - deploy:
-          requires:
-            - hold
           filters:
             branches:
               only: main
+      - deploy:
+          requires:
+            - request-approval
+          
