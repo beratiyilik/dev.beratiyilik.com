@@ -37,7 +37,6 @@ commands:
 jobs:
   install_dependencies:
     <<: *default_config
-    name: Install dependencies
     steps:
       - add_ssh_keys
       - run: 
@@ -50,7 +49,6 @@ jobs:
       - save_node_modules
   lint:
     <<: *default_config
-    name: Linting
     steps:
       - checkout
       - restore_node_modules
