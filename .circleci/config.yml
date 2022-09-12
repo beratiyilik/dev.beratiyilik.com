@@ -37,6 +37,7 @@ commands:
 jobs:
   install_dependencies:
     <<: *default_config
+    name: Install dependencies
     steps:
       - add_ssh_keys
       - run: 
@@ -49,6 +50,7 @@ jobs:
       - save_node_modules
   lint:
     <<: *default_config
+    name: Linting
     steps:
       - checkout
       - restore_node_modules
@@ -109,13 +111,11 @@ workflows:
   test-and-deploy:
     jobs:
       - install_dependencies:
-          name: Install dependencies
           context: dev
-#      - lint:
-#          name: Linting
-#          context: dev
-#          requires:
-#            - install_dependencies
+      - lint:
+         context: dev
+          requires:
+            - install_dependencies
 #      - check_types:
 #          name: Checking types
 #          requires:
