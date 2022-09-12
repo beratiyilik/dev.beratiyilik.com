@@ -150,12 +150,25 @@ workflows:
           filters:
             branches:
               only: dev
-
       - deploy:
           name: Dev Deploy
           context: dev
           requires:
             - approve_dev
+
+      - approve_prod:
+          context: dev
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
+      - deploy:
+          name: Prod Deploy
+          context: dev
+          requires:
+            - approve_prod
 
 ##      - approve_prod:
 ##          type: approval
