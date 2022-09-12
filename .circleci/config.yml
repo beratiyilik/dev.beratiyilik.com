@@ -142,16 +142,20 @@ workflows:
             - integration_tests
             - acceptance_tests
 
-#      - approve_dev:
-#          name: Approve Dev Deploy
-#          type: approval
-#          requires:
-#            - install_dependencies
-#      - deploy:
-#          name: deploy_dev
-#          context: dev
-#          requires:
-#            - approve_dev
+      - approve_dev:
+          context: dev
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: dev
+
+      - deploy:
+          name: Dev Deploy
+          context: dev
+          requires:
+            - approve_dev
 
 ##      - approve_prod:
 ##          type: approval
