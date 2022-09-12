@@ -111,11 +111,11 @@ workflows:
       - install_dependencies:
           name: Install dependencies
           context: dev
-      - lint:
-          name: Linting
-          context: dev
-          requires:
-            - install_dependencies
+#      - lint:
+#          name: Linting
+#          context: dev
+#          requires:
+#            - install_dependencies
 #      - check_types:
 #          name: Checking types
 #          requires:
