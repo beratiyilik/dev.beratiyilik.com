@@ -137,6 +137,7 @@ workflows:
             - acceptance_tests
 
       - approve_dev:
+          name: Approve Dev
           type: approval
           requires:
             - build
@@ -149,6 +150,7 @@ workflows:
             - approve_dev
 
       - approve_prod:
+          name: Approve Prod
           type: approval
           requires:
             - build
