@@ -102,7 +102,7 @@ jobs:
     parameters:
       access-key:
         type: env_var_name
-        default: AWS_ACCESS_KEY
+        default: ACCESS_KEY
       command:
         type: string
     steps:
@@ -115,12 +115,20 @@ jobs:
             npm run build
   deploy:
     <<: *default_config
+    parameters:
+      secret-key:
+        type: env_var_name
+        default: SECRET_KEY
+      command:
+        type: string
     steps:
       - checkout
       - restore_node_modules
       - run:
-          name: deploy.sh
-          command: sh .circleci/deploy.sh
+          name: Deploy | Executing deploy.sh
+          command: |
+          << parameters.command >>
+          sh .circleci/deploy.sh
 
 workflows:
   version: 2
@@ -149,7 +157,7 @@ workflows:
             - check_types
 
       - build:
-          access-key: AWS_ACCESS_KEY
+          access-key: ACCESS_KEY
           command: echo "BUILDING WHAT!!!"
           requires:
             - unit_tests
@@ -165,6 +173,8 @@ workflows:
               only: dev
       - deploy:
           name: Dev Deploy
+          secret-key: SECRET_KEY
+          command: echo "DEPLOYING TO DEV ENV!"
           requires:
             - approve_dev
 
@@ -177,5 +187,7 @@ workflows:
               only: main
       - deploy:
           name: Prod Deploy
+          secret-key: SECRET_KEY
+          command: echo "DEPLOYING TO PROD ENV! BE CAREFUL!"
           requires:
             - approve_prod
