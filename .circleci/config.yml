@@ -53,8 +53,8 @@ jobs:
           name: Smoke tests 
           command: |
             export APP_BASE_URL=https://dev.beratiyilik.com
-            echo "APP_BASE_URL: $APP_BASE_URL"
-            echo "smoke tests will be implemented!""
+            echo APP_BASE_URL: $APP_BASE_URL
+            echo "smoke tests will be implemented!"
 #      - run:
 #          name: Smoke tests
 #          command: |
