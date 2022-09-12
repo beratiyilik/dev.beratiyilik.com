@@ -108,11 +108,9 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - install_dependencies:
-          context: dev
+      - install_dependencies
 
       - lint:
-         context: dev
          requires:
           - install_dependencies
       - check_types:
@@ -120,30 +118,25 @@ workflows:
             - install_dependencies
 
       - unit_tests:
-          context: dev
           requires:
             - lint
             - check_types
       - integration_tests:
-          context: dev
           requires:
             - lint
             - check_types
       - acceptance_tests:
-          context: dev
           requires:
             - lint
             - check_types
 
       - build:
-          context: dev
           requires:
             - unit_tests
             - integration_tests
             - acceptance_tests
 
       - approve_dev:
-          context: dev
           type: approval
           requires:
             - build
@@ -152,12 +145,10 @@ workflows:
               only: dev
       - deploy:
           name: Dev Deploy
-          context: dev
           requires:
             - approve_dev
 
       - approve_prod:
-          context: dev
           type: approval
           requires:
             - build
@@ -166,16 +157,5 @@ workflows:
               only: main
       - deploy:
           name: Prod Deploy
-          context: dev
           requires:
             - approve_prod
-
-##      - approve_prod:
-##          type: approval
-##          requires:
-##            - approve_dev
-##      - deploy:
-##          name: deploy_prod
-##          context: prod
-##          requires:
-##            - approve_prod
