@@ -109,10 +109,10 @@ jobs:
       - checkout
       - restore_node_modules
       - run:
-          name: Build
+          name: Build | Executing build.sh
           command: |
             << parameters.command >>
-            npm run build
+            sh .circleci/build.sh
   deploy:
     <<: *default_config
     parameters:
