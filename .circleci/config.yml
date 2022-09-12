@@ -1,80 +1,181 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
 orbs:
-  # The Node.js orb contains a set of prepackaged CircleCI configuration you can utilize
-  # Orbs reduce the amount of configuration required for common tasks.
-  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@4.7
 
+node_modules_cache_key: &node_modules_cache_key node_modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "package-lock.json" }}
+
+default_config: &default_config
+  docker:
+    - image: cimg/node:16.10
+#  environment:
+#    JEST_WORKERS: 2
+
+commands:
+  save_node_modules:
+    steps:
+      - save_cache:
+          key: *node_modules_cache_key
+          paths:
+            - ./node_modules
+  restore_node_modules:
+    steps:
+      - restore_cache:
+          key: *node_modules_cache_key
+  ensure_ahead_of_main:
+    steps:
+      - run:
+          name: Ensure branch is ahead of main
+          command: |
+            git fetch origin main;
+            if ! git merge-base --is-ancestor origin/main HEAD;
+            then
+            printf '\n\n ** Your branch must be ahead of main to deploy **\n\n';
+            exit 1;
+            fi
+
 jobs:
-  # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  test-and-build:
-    # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
-    # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
-    docker:
-      - image: cimg/node:16.10
-    # Then run your tests!
-    # CircleCI will report the results back to your VCS provider.
+  install_dependencies:
+    <<: *default_config
     steps:
-      # Checkout the code as the first step.
-      - checkout
-      # Next, the node orb's install-packages step will install the dependencies from a package.json.
-      # The orb install-packages step will also automatically cache them for faster future runs.
-      - node/install-packages:
-          # If you are using yarn, change the line below from "npm" to "yarn"
-          pkg-manager: npm
-      - run:
-          name: Linting check
-          command: npm run lint
-      - run:
-          name: Run tests
-          command: npm run test
-      - run:
-          name: Build
-          command: npm run build
-  deploy:
-    docker:
-      - image: cimg/node:16.10
-    # Then run your tests!
-    # CircleCI will report the results back to your VCS provider.
-    steps:
-      - checkout
       - add_ssh_keys
       - run: 
           name: Installing OS packages
           command: sudo apt-get -y update && sudo apt install rsync
+      - checkout
+      - restore_node_modules
+      - node/install-packages:
+          pkg-manager: npm
+      - save_node_modules
+  lint:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
+      - run:
+          name: Lint
+          command: npm run lint
+  check_types:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
+      - run:
+          name: Check types
+          command: echo "Check types will be implemented!"
+  unit_tests:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
+      - run:
+          name: Run unit tests
+          command: npm run test
+  integration_tests:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
+      - run:
+          name: Run integration tests
+          command: npm run test
+  acceptance_tests:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
+      - run:
+          name: Run acceptance tests
+          command: npm run test
+  build:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
+      - run:
+          name: Build
+          command: npm run build
+  deploy:
+    <<: *default_config
+    steps:
+      - checkout
+      - restore_node_modules
       - run:
           name: deploy.sh
           command: sh .circleci/deploy.sh
-      - run:
-          name: Smoke tests 
-          command: echo "smoke tests will be implemented!"
-#      - run:
-#          name: Smoke tests
-#          command: |
-#            export APP_BASE_URL=https://dev.beratiyilik.com
-#            npm run test:smoke
-    
+
 workflows:
-  # Below is the definition of your workflow.
-  # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
-  # CircleCI will run this workflow on every commit.
-  # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  sample:
+  version: 2
+  test-and-deploy:
     jobs:
-      - test-and-build
-      # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
-      # - node/test
-      - request-approval:
+      - install_dependencies:
+          context: dev
+
+      - lint:
+         context: dev
+         requires:
+          - install_dependencies
+      - check_types:
+          requires:
+            - install_dependencies
+
+      - unit_tests:
+          context: dev
+          requires:
+            - lint
+            - check_types
+      - integration_tests:
+          context: dev
+          requires:
+            - lint
+            - check_types
+      - acceptance_tests:
+          context: dev
+          requires:
+            - lint
+            - check_types
+
+      - build:
+          context: dev
+          requires:
+            - unit_tests
+            - integration_tests
+            - acceptance_tests
+
+      - approve_dev:
+          context: dev
           type: approval
           requires:
-            - test-and-build
+            - build
+          filters:
+            branches:
+              only: dev
+      - deploy:
+          name: Dev Deploy
+          context: dev
+          requires:
+            - approve_dev
+
+      - approve_prod:
+          context: dev
+          type: approval
+          requires:
+            - build
           filters:
             branches:
               only: main
       - deploy:
+          name: Prod Deploy
+          context: dev
           requires:
-            - request-approval
+            - approve_prod
+
+##      - approve_prod:
+##          type: approval
+##          requires:
+##            - approve_dev
+##      - deploy:
+##          name: deploy_prod
+##          context: prod
+##          requires:
+##            - approve_prod
