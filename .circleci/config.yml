@@ -108,7 +108,7 @@ workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - install_dependencies:
+      - install_dependencies
 
       - lint:
          requires:
