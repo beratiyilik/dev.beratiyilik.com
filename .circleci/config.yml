@@ -14,6 +14,9 @@ default_config: &default_config
 commands:
   save_node_modules:
     steps:
+      - run:
+          name: LS -LA
+          command: ls -la
       - save_cache:
           key: *node_modules_cache_key
           paths:
