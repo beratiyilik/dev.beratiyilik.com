@@ -14,9 +14,6 @@ default_config: &default_config
 commands:
   save_node_modules:
     steps:
-      - run:
-          name: LS -LA
-          command: ls -la
       - save_cache:
           key: *node_modules_cache_key
           paths:
@@ -41,6 +38,10 @@ jobs:
   install_dependencies:
     <<: *default_config
     steps:
+      - add_ssh_keys
+      - run: 
+          name: Installing OS packages
+          command: sudo apt-get -y update && sudo apt install rsync
       - checkout
       - restore_node_modules
       - node/install-packages:
@@ -86,7 +87,7 @@ jobs:
       - run:
           name: Run acceptance tests
           command: echo "Run integration tests will be implemented!"
-  test:
+  tests:
     <<: *default_config
     steps:
       - checkout
@@ -102,15 +103,14 @@ jobs:
       - run:
           name: Build
           command: npm run build
+      - run:
+          name: Show Build
+          command: ls -la ./ /build
   deploy:
     <<: *default_config
     steps:
       - checkout
       - restore_node_modules
-      - add_ssh_keys
-      - run: 
-          name: Installing OS packages
-          command: sudo apt-get -y update && sudo apt install rsync
       - run:
           name: deploy.sh
           command: sh .circleci/deploy.sh
@@ -138,6 +138,16 @@ workflows:
           requires:
             - install_dependencies
       - acceptance_tests:
+          context: dev
+          requires:
+            - install_dependencies
+
+      - tests:
+          context: dev
+          requires:
+            - install_dependencies
+
+      - build:
           context: dev
           requires:
             - install_dependencies
