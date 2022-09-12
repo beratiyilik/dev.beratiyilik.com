@@ -110,29 +110,31 @@ workflows:
     jobs:
       - install_dependencies:
           context: dev
+
       - lint:
          context: dev
          requires:
           - install_dependencies
+      - check_types:
+          requires:
+            - install_dependencies
 
-#      - check_types:
-#          name: Checking types
-#          requires:
-#            - install_dependencies
-#      - unit_tests:
-#          name: Running unit tests
-#          requires:
-#            - install_dependencies
-#      - integration_tests:
-#          name: Running integration tests
-#          context: dev
-#          requires:
-#            - install_dependencies
-#      - acceptance_tests:
-#          name: Running acceptance tests
-#          context: dev
-#          requires:
-#            - install_dependencies
+      - unit_tests:
+          context: dev
+          requires:
+            - lint
+            - check_types
+      - integration_tests:
+          context: dev
+          requires:
+            - lint
+            - check_types
+      - acceptance_tests:
+          context: dev
+          requires:
+            - lint
+            - check_types
+
 #      - build:
 #          name: Build
 #          context: dev
