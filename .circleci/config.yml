@@ -127,8 +127,8 @@ jobs:
       - run:
           name: Deploy | Executing deploy.sh
           command: |
-          << parameters.command >>
-          sh .circleci/deploy.sh
+            << parameters.command >>
+            sh .circleci/deploy.sh
 
 workflows:
   version: 2
