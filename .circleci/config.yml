@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   node: circleci/node@4.7
 
-node_modules_cache_key: &node_modules_cache_key node_modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.lock" }}
+node_modules_cache_key: &node_modules_cache_key node_modules-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.lock.json" }}
 
 default_config: &default_config
   docker:
