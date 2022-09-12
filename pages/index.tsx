@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const error: Error = result.error;
   return (
     <div >
-      {`TEST FOR APP_USER YEMEK:  ${data?.name}`}
+      {`FINAL:  ${data?.name}`}
     </div>
   )
 }
