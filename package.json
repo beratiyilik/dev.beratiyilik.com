@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "test:smoke": "export APP_BASE_URL=${APP_BASE_URL:=https://localhost:3000}; jest --roots=./test/smoke --detectOpenHandles"
   },
   "dependencies": {
     "next": "12.3.0",

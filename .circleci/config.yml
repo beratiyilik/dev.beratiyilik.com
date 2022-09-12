@@ -49,6 +49,11 @@ jobs:
       - run:
           name: deploy.sh
           command: sh .circleci/deploy.sh
+     - run:
+          name: Smoke tests
+          command: |
+            export APP_BASE_URL=https://dev.beratiyilik.com
+            npm run test:smoke
     
 workflows:
   # Below is the definition of your workflow.
