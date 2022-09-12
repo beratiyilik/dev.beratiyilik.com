@@ -113,47 +113,49 @@ workflows:
           context: dev
       - lint:
           name: Linting
-          requires:
-            - install_dependencies
-      - check_types:
-          name: Checking types
-          requires:
-            - install_dependencies
-      - unit_tests:
-          name: Running unit tests
-          requires:
-            - install_dependencies
-      - integration_tests:
-          name: Running integration tests
           context: dev
           requires:
             - install_dependencies
-      - acceptance_tests:
-          name: Running acceptance tests
-          context: dev
-          requires:
-            - install_dependencies
-      - build:
-          name: Build
-          context: dev
-          requires:
-            - install_dependencies
-      - approve_dev:
-          name: Approve Dev Deploy
-          type: approval
-          requires:
-            - install_dependencies
-      - deploy:
-          name: deploy_dev
-          context: dev
-          requires:
-            - approve_dev
-#      - approve_prod:
+#      - check_types:
+#          name: Checking types
+#          requires:
+#            - install_dependencies
+#      - unit_tests:
+#          name: Running unit tests
+#          requires:
+#            - install_dependencies
+#      - integration_tests:
+#          name: Running integration tests
+#          context: dev
+#          requires:
+#            - install_dependencies
+#      - acceptance_tests:
+#          name: Running acceptance tests
+#          context: dev
+#          requires:
+#            - install_dependencies
+#      - build:
+#          name: Build
+#          context: dev
+#          requires:
+#            - install_dependencies
+#      - approve_dev:
+#          name: Approve Dev Deploy
 #          type: approval
 #          requires:
-#            - approve_dev
+#            - install_dependencies
 #      - deploy:
-#          name: deploy_prod
-#          context: prod
+#          name: deploy_dev
+#          context: dev
 #          requires:
-#            - approve_prod
+#            - approve_dev
+
+##      - approve_prod:
+##          type: approval
+##          requires:
+##            - approve_dev
+##      - deploy:
+##          name: deploy_prod
+##          context: prod
+##          requires:
+##            - approve_prod
