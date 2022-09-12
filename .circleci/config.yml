@@ -33,7 +33,17 @@ commands:
             printf '\n\n ** Your branch must be ahead of main to deploy **\n\n';
             exit 1;
             fi
-
+  set-custom-environment-variable:
+    parameters:
+      value:
+        default: "default-value"
+        type: string
+    steps:
+      - run:
+          name: "Set custom environment variable"
+          command: |
+            echo 'export CUSTOM_ENV_VAR="<<parameters.value>>"' >> "$BASH_ENV"
+            source $BASH_ENV
 jobs:
   install_dependencies:
     <<: *default_config
@@ -89,20 +99,36 @@ jobs:
           command: npm run test
   build:
     <<: *default_config
+    parameters:
+      access-key:
+        type: env_var_name
+        default: ACCESS_KEY
+      command:
+        type: string
     steps:
       - checkout
       - restore_node_modules
       - run:
           name: Build
-          command: npm run build
+          command: |
+            << parameters.command >>
+            npm run build
   deploy:
     <<: *default_config
+    parameters:
+      secret-key:
+        type: env_var_name
+        default: SECRET_KEY
+      command:
+        type: string
     steps:
       - checkout
       - restore_node_modules
       - run:
-          name: deploy.sh
-          command: sh .circleci/deploy.sh
+          name: Deploy | Executing deploy.sh
+          command: |
+            << parameters.command >>
+            sh .circleci/deploy.sh
 
 workflows:
   version: 2
@@ -131,6 +157,8 @@ workflows:
             - check_types
 
       - build:
+          access-key: ACCESS_KEY
+          command: echo "BUILDING WHAT!!!"
           requires:
             - unit_tests
             - integration_tests
@@ -145,6 +173,8 @@ workflows:
               only: dev
       - deploy:
           name: Dev Deploy
+          secret-key: SECRET_KEY
+          command: echo "DEPLOYING TO DEV ENV!"
           requires:
             - approve_dev
 
@@ -157,5 +187,7 @@ workflows:
               only: main
       - deploy:
           name: Prod Deploy
+          secret-key: SECRET_KEY
+          command: echo "DEPLOYING TO PROD ENV! BE CAREFUL!"
           requires:
             - approve_prod
