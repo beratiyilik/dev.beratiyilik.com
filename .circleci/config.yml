@@ -135,11 +135,13 @@ workflows:
             - lint
             - check_types
 
-#      - build:
-#          name: Build
-#          context: dev
-#          requires:
-#            - install_dependencies
+      - build:
+          context: dev
+          requires:
+            - unit_tests
+            - integration_tests
+            - acceptance_tests
+
 #      - approve_dev:
 #          name: Approve Dev Deploy
 #          type: approval
