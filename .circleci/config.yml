@@ -49,7 +49,7 @@ jobs:
       - run:
           name: deploy.sh
           command: sh .circleci/deploy.sh
-     - run:
+      - run:
           name: Smoke tests
           command: |
             export APP_BASE_URL=https://dev.beratiyilik.com
@@ -75,4 +75,3 @@ workflows:
       - deploy:
           requires:
             - request-approval
-          
