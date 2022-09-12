@@ -12,10 +12,11 @@ echo "LOCAL PATH: ${PATH}" # print the path
 
 ssh root@ssh.beratiyilik.com "cd /var/www/dev.beratiyilik.com && rm -rf build node_modules"
 
-rsync -va --delete ./ root@ssh.beratiyilik.com:/var/www/dev.beratiyilik.com --exclude={"build",".git",".gitignore","node_modules",".circleci"}  # deploy the project
+rsync -va --delete ./ root@ssh.beratiyilik.com:/var/www/dev.beratiyilik.com --exclude={".circleci",".git",".gitignore","build","node_modules"}  # deploy the project
 
 ssh root@ssh.beratiyilik.com<<EOF
     cd /var/www/dev.beratiyilik.com;
+    rm -rf build node_modules;
     npm install && npm run build;
     pm2 restart APP_TEST && systemctl restart nginx;
     pm2 show APP_TEST;
