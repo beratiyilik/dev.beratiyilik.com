@@ -3,9 +3,10 @@ echo "EXECUTING deploy.sh FILE!";
 
 echo "Working directory: $PWD";
 
-echo "ls -la: $(ls -la)";
+# echo "ls -la: $(ls -la)";
 
-echo "ENVIRONMENT VARIABLES: $BASH_ENV";
+echo "ENVIRONMENT VARIABLES:";
+printenv;
 
 rsync -e "ssh -oStrictHostKeyChecking=no -v" -va --delete ./ $VPS_USERNAME@$VPS_HOSTNAME:/var/www/dev.beratiyilik.com --exclude '.circleci' --exclude '.git' --exclude '.gitignore' --exclude 'build' --exclude 'node_modules'
 
