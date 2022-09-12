@@ -114,8 +114,9 @@ workflows:
           context: dev
       - lint:
          context: dev
-          requires:
-            - install_dependencies
+         requires:
+          - install_dependencies
+
 #      - check_types:
 #          name: Checking types
 #          requires:
