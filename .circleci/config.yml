@@ -70,7 +70,7 @@ jobs:
       - restore_node_modules
       - run:
           name: Run unit tests
-          command: echo "Run unit tests will be implemented!"
+          command: npm run test
   integration_tests:
     <<: *default_config
     steps:
@@ -78,7 +78,7 @@ jobs:
       - restore_node_modules
       - run:
           name: Run integration tests
-          command: echo "Run integration tests will be implemented!"
+          command: npm run test
   acceptance_tests:
     <<: *default_config
     steps:
@@ -86,14 +86,6 @@ jobs:
       - restore_node_modules
       - run:
           name: Run acceptance tests
-          command: echo "Run integration tests will be implemented!"
-  tests:
-    <<: *default_config
-    steps:
-      - checkout
-      - restore_node_modules
-      - run:
-          name: Run tests
           command: npm run test
   build:
     <<: *default_config
@@ -103,20 +95,17 @@ jobs:
       - run:
           name: Build
           command: npm run build
-      - run:
-          name: Show Build
-          command: ls -la . build
   deploy:
     <<: *default_config
     steps:
       - checkout
       - restore_node_modules
       - run:
-          name: deploy.sh
-          command: sh .circleci/deploy.sh
-      - run:
-          name: Smoke tests 
-          command: echo "smoke tests will be implemented!"
+          name: Show Deploy
+          command: ls -la . build
+#      - run:
+#          name: deploy.sh
+#          command: sh .circleci/deploy.sh
 
 workflows:
   version: 2
@@ -141,12 +130,6 @@ workflows:
           context: dev
           requires:
             - install_dependencies
-
-      - tests:
-          context: dev
-          requires:
-            - install_dependencies
-
       - build:
           context: dev
           requires:
@@ -160,12 +143,12 @@ workflows:
           context: dev
           requires:
             - approve_dev
-      - approve_prod:
-          type: approval
-          requires:
-            - approve_dev
-      - deploy:
-          name: deploy_prod
-          context: prod
-          requires:
-            - approve_prod
+#      - approve_prod:
+#          type: approval
+#          requires:
+#            - approve_dev
+#      - deploy:
+#          name: deploy_prod
+#          context: prod
+#          requires:
+#            - approve_prod
