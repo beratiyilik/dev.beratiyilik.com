@@ -99,12 +99,20 @@ jobs:
           command: npm run test
   build:
     <<: *default_config
+    parameters:
+      access-key:
+        type: env_var_name
+        default: AWS_ACCESS_KEY
+      command:
+        type: string
     steps:
       - checkout
       - restore_node_modules
       - run:
           name: Build
-          command: npm run build
+          command: |
+            << parameters.command >>
+            npm run build
   deploy:
     <<: *default_config
     steps:
@@ -141,6 +149,8 @@ workflows:
             - check_types
 
       - build:
+          access-key: AWS_ACCESS_KEY
+          command: echo "BUILDING WHAT!!!"
           requires:
             - unit_tests
             - integration_tests
