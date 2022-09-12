@@ -22,34 +22,37 @@ commands:
     steps:
       - restore_cache:
           key: *node_modules_cache_key
-  ensure_ahead_of_main:
-    steps:
-      - run:
-          name: Ensure branch is ahead of main
-          command: |
-            git fetch origin main;
-            if ! git merge-base --is-ancestor origin/main HEAD;
-            then
-            printf '\n\n ** Your branch must be ahead of main to deploy **\n\n';
-            exit 1;
-            fi
-  set-custom-environment-variable:
+  #  ensure_ahead_of_main:
+  #    steps:
+  #      - run:
+  #          name: Ensure branch is ahead of main
+  #          command: |
+  #            git fetch origin main;
+  #            if ! git merge-base --is-ancestor origin/main HEAD;
+  #            then
+  #            printf '\n\n ** Your branch must be ahead of main to deploy **\n\n';
+  #            exit 1;
+  #            fi
+  set-environment-variable:
     parameters:
+      key:
+        type: env_var_name
+        default: ENV_VAR
       value:
-        default: "default-value"
         type: string
+        default: "default-value"
     steps:
       - run:
-          name: "Set custom environment variable"
+          name: "Set environment variable"
           command: |
-            echo 'export CUSTOM_ENV_VAR="<<parameters.value>>"' >> "$BASH_ENV"
+            echo 'export <<parameters.key>>="<<parameters.value>>"' >> "$BASH_ENV"
             source $BASH_ENV
 jobs:
   install_dependencies:
     <<: *default_config
     steps:
       - add_ssh_keys
-      - run: 
+      - run:
           name: Installing OS packages
           command: sudo apt-get -y update && sudo apt install rsync
       - checkout
@@ -137,8 +140,8 @@ workflows:
       - install_dependencies
 
       - lint:
-         requires:
-          - install_dependencies
+          requires:
+            - install_dependencies
       - check_types:
           requires:
             - install_dependencies
