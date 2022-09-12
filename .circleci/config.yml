@@ -105,7 +105,7 @@ jobs:
           command: npm run build
       - run:
           name: Show Build
-          command: ls -la ./ /build
+          command: ls -la . build
   deploy:
     <<: *default_config
     steps:
