@@ -22,34 +22,13 @@ commands:
     steps:
       - restore_cache:
           key: *node_modules_cache_key
-  ensure_ahead_of_main:
-    steps:
-      - run:
-          name: Ensure branch is ahead of main
-          command: |
-            git fetch origin main;
-            if ! git merge-base --is-ancestor origin/main HEAD;
-            then
-            printf '\n\n ** Your branch must be ahead of main to deploy **\n\n';
-            exit 1;
-            fi
-  set-custom-environment-variable:
-    parameters:
-      value:
-        default: "default-value"
-        type: string
-    steps:
-      - run:
-          name: "Set custom environment variable"
-          command: |
-            echo 'export CUSTOM_ENV_VAR="<<parameters.value>>"' >> "$BASH_ENV"
-            source $BASH_ENV
+
 jobs:
   install_dependencies:
     <<: *default_config
     steps:
       - add_ssh_keys
-      - run: 
+      - run:
           name: Installing OS packages
           command: sudo apt-get -y update && sudo apt install rsync
       - checkout
@@ -99,36 +78,20 @@ jobs:
           command: npm run test
   build:
     <<: *default_config
-    parameters:
-      access-key:
-        type: env_var_name
-        default: ACCESS_KEY
-      command:
-        type: string
     steps:
       - checkout
       - restore_node_modules
       - run:
           name: Build | Executing build.sh
-          command: |
-            << parameters.command >>
-            sh .circleci/build.sh
+          command: sh .circleci/build.sh
   deploy:
     <<: *default_config
-    parameters:
-      secret-key:
-        type: env_var_name
-        default: SECRET_KEY
-      command:
-        type: string
     steps:
       - checkout
       - restore_node_modules
       - run:
           name: Deploy | Executing deploy.sh
-          command: |
-            << parameters.command >>
-            sh .circleci/deploy.sh
+          command: sh .circleci/deploy.sh
 
 workflows:
   version: 2
@@ -137,8 +100,8 @@ workflows:
       - install_dependencies
 
       - lint:
-         requires:
-          - install_dependencies
+          requires:
+            - install_dependencies
       - check_types:
           requires:
             - install_dependencies
@@ -157,8 +120,6 @@ workflows:
             - check_types
 
       - build:
-          access-key: ACCESS_KEY
-          command: echo "BUILDING WHAT!!!"
           requires:
             - unit_tests
             - integration_tests
@@ -173,8 +134,6 @@ workflows:
               only: dev
       - deploy:
           name: Dev Deploy
-          secret-key: SECRET_KEY
-          command: echo "DEPLOYING TO DEV ENV!"
           requires:
             - approve_dev
 
@@ -187,7 +146,5 @@ workflows:
               only: main
       - deploy:
           name: Prod Deploy
-          secret-key: SECRET_KEY
-          command: echo "DEPLOYING TO PROD ENV! BE CAREFUL!"
           requires:
             - approve_prod
