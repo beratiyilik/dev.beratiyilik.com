@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const error: Error = result.error;
   return (
     <div >
-      {`FINAL:  ${data?.name}`}
+      {`Still Working:  ${data?.name}`}
     </div>
   )
 }
