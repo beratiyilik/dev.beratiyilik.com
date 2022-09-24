@@ -89,6 +89,10 @@ jobs:
     steps:
       - checkout
       - restore_node_modules
+      - add_ssh_keys
+      - run:
+          name: Installing OS packages
+          command: sudo apt-get -y update && sudo apt install rsync
       - run:
           name: Deploy | Executing deploy.sh
           command: sh .circleci/deploy.sh
