@@ -10,14 +10,16 @@ rsync -e "ssh -oStrictHostKeyChecking=no -v" -va --delete ./ $VPS_USERNAME@$VPS_
 
 ssh -oStrictHostKeyChecking=no -v $VPS_USERNAME@$VPS_HOSTNAME<<EOF
     cd /var/www/dev.beratiyilik.com;
-    rm -rf build node_modules;
-    npm install && npm run build;
-    pm2 restart APP_TEST && systemctl restart nginx;
-    pm2 show APP_TEST;
-    systemctl status nginx;
+    docker-compose up -d --build
     logout;
 EOF
 
 echo "END OF deploy.sh FILE!";
+
+# rm -rf build node_modules;
+# npm install && npm run build;
+# pm2 restart APP_TEST && systemctl restart nginx;
+# pm2 show APP_TEST;
+# systemctl status nginx;
 
 ## eof

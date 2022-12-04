@@ -4,7 +4,9 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import useSWR from "swr";
 
-const getRandomInt = (max: number): number => Math.floor(Math.random() * max)
+const getRandomInt = (max: number): number => Math.floor(Math.random() * max);
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 type Data = {
   name: string;
