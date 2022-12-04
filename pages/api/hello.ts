@@ -9,5 +9,5 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: "dev.beratiyilik.com and supported docker" });
+  res.status(200).json({ name: "dev.beratiyilik.com \n\n now it is dockerized" });
 }
