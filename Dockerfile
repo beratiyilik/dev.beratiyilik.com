@@ -4,8 +4,6 @@ WORKDIR /opt/dev-beratiyilik-com
 
 COPY . .
 
-RUN npm install --global pm2
-
 RUN npm install
 
 RUN npm run build

@@ -1,1 +1,9 @@
 node_modules/
+
+.circleci/
+
+.git
+
+build/
+
+.gitignore
