@@ -1,8 +1,10 @@
 FROM node:slim
 
-WORKDIR /opt/dev-beratiyilik-com
+WORKDIR /opt/dev.beratiyilik.com
 
 COPY . .
+
+RUN npm install --global pm2
 
 RUN npm install
 
